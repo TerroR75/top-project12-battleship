@@ -52,6 +52,27 @@ var GameBoard = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./src/domManip/GameBoard.js":
+/*!***********************************!*\
+  !*** ./src/domManip/GameBoard.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "appendTiles": () => (/* binding */ appendTiles)
+/* harmony export */ });
+function appendTiles(gameBoardDOM, gameBoardObject) {
+  for (var i = 0; i < gameBoardObject.gameBoard.length; i++) {
+    var tile = document.createElement('div');
+    tile.classList.add('tile');
+    tile.dataset.id = i;
+    gameBoardDOM.appendChild(tile);
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss":
 /*!***********************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss ***!
@@ -71,7 +92,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "* {\n  padding: 0;\n  margin: 0;\n}\n\nbody {\n  background-color: #272727;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA;EACI,UAAA;EACA,SAAA;AACJ;;AAEA;EACI,yBAAA;AACJ","sourcesContent":["* {\r\n    padding: 0;\r\n    margin: 0;\r\n}\r\n\r\nbody {\r\n    background-color: #272727;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "* {\n  padding: 0;\n  margin: 0;\n}\n\nbody {\n  background-color: #272727;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.gameWindow {\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 100px;\n}\n.gameWindow .playerBoard,\n.gameWindow .aiBoard {\n  width: 500px;\n  height: 500px;\n  border: 1px solid white;\n  display: flex;\n  flex-wrap: wrap;\n  flex-shrink: 0;\n}\n.gameWindow .playerBoard .tile {\n  border: 1px solid rgba(255, 255, 255, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}\n.gameWindow .aiBoard {\n  border: 1px solid green;\n}\n.gameWindow .aiBoard .tile {\n  border: 1px solid rgba(0, 128, 0, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA;EACI,UAAA;EACA,SAAA;AACJ;;AAEA;EACI,yBAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;AACJ;;AAEA;EACI,aAAA;EACA,YAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,UAAA;AACJ;AACI;;EAEI,YAAA;EACA,aAAA;EACA,uBAAA;EACA,aAAA;EACA,eAAA;EACA,cAAA;AACR;AAGQ;EACI,4CAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AADZ;AAKI;EACI,uBAAA;AAHR;AAKQ;EACI,wCAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAHZ","sourcesContent":["* {\r\n    padding: 0;\r\n    margin: 0;\r\n}\r\n\r\nbody {\r\n    background-color: #272727;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.gameWindow {\r\n    height: 100vh;\r\n    width: 100vw;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 100px;\r\n\r\n    .playerBoard,\r\n    .aiBoard {\r\n        width: 500px;\r\n        height: 500px;\r\n        border: 1px solid white;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        flex-shrink: 0;\r\n    }\r\n\r\n    .playerBoard {\r\n        .tile {\r\n            border: 1px solid rgba(255, 255, 255, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n\r\n    .aiBoard {\r\n        border: 1px solid green;\r\n\r\n        .tile {\r\n            border: 1px solid rgba(0, 128, 0, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -660,12 +681,22 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "aiBoard": () => (/* binding */ aiBoard),
+/* harmony export */   "playerBoard": () => (/* binding */ playerBoard)
+/* harmony export */ });
 /* harmony import */ var _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./classes/GameBoard */ "./src/classes/GameBoard.js");
 /* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
+/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./domManip/GameBoard */ "./src/domManip/GameBoard.js");
 
 
+
+var playerBoard = document.querySelector('.playerBoard');
+var aiBoard = document.querySelector('.aiBoard');
+var gameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]();
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_2__.appendTiles)(playerBoard, gameBoard);
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main967f9d02cab7868cabd4.js.map
+//# sourceMappingURL=main1eb2e032f023cf8771a3.js.map
