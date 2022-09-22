@@ -11,7 +11,26 @@ export default class GameBoard {
     }
 
     hit(index) {
-        if (gameBoard[index].isHit === true) return;
-        gameBoard[index].isHit = true;
+        if (this.gameBoard[index].isHit === true) {
+            return;
+        }
+        else {
+            this.gameBoard[index].isHit = true;
+        }
+
+
+        if (this.gameBoard[index].hasShip) {
+            this.gameBoard[index].ship.isHit = true;
+            this.gameBoard[index].ship.hit();
+        }
+    }
+
+    addShip(ship, positions) {
+        for (let i = 0; i < ship.length; i++) {
+            ship.position.push({ pos: positions[i], isHit: false });
+
+            this.gameBoard[positions[i]].hasShip = true;
+            this.gameBoard[positions[i]].ship = ship;
+        }
     }
 }

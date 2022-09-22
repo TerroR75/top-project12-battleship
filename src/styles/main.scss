@@ -50,5 +50,9 @@ body {
             box-sizing: border-box;
             user-select: none;
         }
+
+        .tile.hasShip {
+            background: white;
+        }
     }
 }

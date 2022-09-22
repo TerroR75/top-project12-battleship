@@ -40,12 +40,106 @@ var GameBoard = /*#__PURE__*/function () {
   }, {
     key: "hit",
     value: function hit(index) {
-      if (gameBoard[index].isHit === true) return;
-      gameBoard[index].isHit = true;
+      if (this.gameBoard[index].isHit === true) {
+        return;
+      } else {
+        this.gameBoard[index].isHit = true;
+      }
+
+      if (this.gameBoard[index].hasShip) {
+        this.gameBoard[index].ship.isHit = true;
+        this.gameBoard[index].ship.hit();
+      }
+    }
+  }, {
+    key: "addShip",
+    value: function addShip(ship, positions) {
+      for (var i = 0; i < ship.length; i++) {
+        ship.position.push({
+          pos: positions[i],
+          isHit: false
+        });
+        this.gameBoard[positions[i]].hasShip = true;
+        this.gameBoard[positions[i]].ship = ship;
+      }
     }
   }]);
 
   return GameBoard;
+}();
+
+
+
+/***/ }),
+
+/***/ "./src/classes/Ship.js":
+/*!*****************************!*\
+  !*** ./src/classes/Ship.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Ship)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Ship = /*#__PURE__*/function () {
+  function Ship(type) {
+    _classCallCheck(this, Ship);
+
+    this.type = type;
+    this.sunk = false;
+    this.length = this.determineLength(this.type);
+    this.position = [];
+    this.hitTimes = 0;
+  }
+
+  _createClass(Ship, [{
+    key: "determineLength",
+    value: function determineLength(type) {
+      switch (type) {
+        case 'Carrier':
+          return 5;
+
+        case 'Battleship':
+          return 4;
+
+        case 'Destroyer':
+          return 3;
+
+        case 'Submarine':
+          return 3;
+
+        case 'Patrol_Boat':
+          return 2;
+
+        default:
+          return 0;
+      }
+    }
+  }, {
+    key: "hit",
+    value: function hit() {
+      this.hitTimes += 1;
+      this.checkIfSunken();
+    }
+  }, {
+    key: "checkIfSunken",
+    value: function checkIfSunken() {
+      if (this.hitTimes === this.length) {
+        this.sunk = true;
+      } else {
+        this.sunk = false;
+      }
+    }
+  }]);
+
+  return Ship;
 }();
 
 
@@ -686,17 +780,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "playerBoard": () => (/* binding */ playerBoard)
 /* harmony export */ });
 /* harmony import */ var _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./classes/GameBoard */ "./src/classes/GameBoard.js");
-/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
-/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./domManip/GameBoard */ "./src/domManip/GameBoard.js");
+/* harmony import */ var _classes_Ship__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/Ship */ "./src/classes/Ship.js");
+/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
+/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./domManip/GameBoard */ "./src/domManip/GameBoard.js");
+
 
 
 
 var playerBoard = document.querySelector('.playerBoard');
 var aiBoard = document.querySelector('.aiBoard');
 var gameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]();
-(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_2__.appendTiles)(playerBoard, gameBoard);
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(playerBoard, gameBoard);
+var newCarrier = new _classes_Ship__WEBPACK_IMPORTED_MODULE_1__["default"]('Carrier');
+console.log(newCarrier);
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main1eb2e032f023cf8771a3.js.map
+//# sourceMappingURL=main2915720565b486508926.js.map
