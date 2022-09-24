@@ -12,17 +12,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ GameBoard)
 /* harmony export */ });
+/* harmony import */ var _Ship__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Ship */ "./src/classes/Ship.js");
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/utils */ "./src/utils/utils.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
+function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+
+
+
+
+var _generateShips = /*#__PURE__*/new WeakSet();
+
 var GameBoard = /*#__PURE__*/function () {
   function GameBoard() {
     _classCallCheck(this, GameBoard);
 
-    this.gameBoard = [];
+    _classPrivateMethodInitSpec(this, _generateShips);
+
+    this.tileArray = [];
     this.init();
   }
 
@@ -30,7 +45,7 @@ var GameBoard = /*#__PURE__*/function () {
     key: "init",
     value: function init() {
       for (var i = 0; i < 100; i++) {
-        this.gameBoard.push({
+        this.tileArray.push({
           isHit: false,
           hasShip: false,
           ship: null
@@ -40,15 +55,15 @@ var GameBoard = /*#__PURE__*/function () {
   }, {
     key: "hit",
     value: function hit(index) {
-      if (this.gameBoard[index].isHit === true) {
+      if (this.tileArray[index].isHit === true) {
         return;
       } else {
-        this.gameBoard[index].isHit = true;
+        this.tileArray[index].isHit = true;
       }
 
-      if (this.gameBoard[index].hasShip) {
-        this.gameBoard[index].ship.isHit = true;
-        this.gameBoard[index].ship.hit();
+      if (this.tileArray[index].hasShip) {
+        this.tileArray[index].ship.isHit = true;
+        this.tileArray[index].ship.hit();
       }
     }
   }, {
@@ -59,14 +74,65 @@ var GameBoard = /*#__PURE__*/function () {
           pos: positions[i],
           isHit: false
         });
-        this.gameBoard[positions[i]].hasShip = true;
-        this.gameBoard[positions[i]].ship = ship;
+        this.tileArray[positions[i]].hasShip = true;
+        this.tileArray[positions[i]].ship = ship;
       }
+    }
+  }, {
+    key: "randomPlacement",
+    value: function randomPlacement() {
+      var _this = this;
+
+      var ships = _classPrivateMethodGet(this, _generateShips, _generateShips2).call(this);
+
+      for (var i = 0; i < ships.length; i++) {
+        var axis = _utils_utils__WEBPACK_IMPORTED_MODULE_1__.utils.randomIntFromInterval(0, 1); // 0 - Horizontal, 1 - Vertical
+
+        var boardIndex = _utils_utils__WEBPACK_IMPORTED_MODULE_1__.utils.randomIntFromInterval(0, this.tileArray.length - 1);
+        console.log(axis);
+        console.log(boardIndex);
+
+        if (_utils_utils__WEBPACK_IMPORTED_MODULE_1__.utils.shipCanBePlaced(axis, boardIndex, ships[i].length)) {
+          var positions = [boardIndex];
+          var nextPos = boardIndex;
+
+          for (var j = 1; j < ships[i].length; j++) {
+            nextPos += _utils_utils__WEBPACK_IMPORTED_MODULE_1__.utils.returnPosOffset(axis);
+            positions.push(nextPos);
+          }
+
+          console.log(positions);
+
+          if (positions.some(function (pos) {
+            return _this.tileArray[pos].hasShip;
+          })) {
+            i--;
+          } else {
+            this.addShip(ships[i], positions);
+          }
+        } else {
+          i--;
+        }
+      }
+
+      console.log(this.tileArray);
     }
   }]);
 
   return GameBoard;
 }();
+
+function _generateShips2() {
+  var shipNames = ['Carrier', 'Battleship', 'Destroyer', 'Submarine', 'Patrol_Boat'];
+  var ships = [];
+
+  for (var i = 0; i < shipNames.length; i++) {
+    var newShip = new _Ship__WEBPACK_IMPORTED_MODULE_0__["default"]("".concat(shipNames[i]));
+    ships.push(newShip);
+  }
+
+  return ships;
+}
 
 
 
@@ -154,16 +220,97 @@ var Ship = /*#__PURE__*/function () {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "appendTiles": () => (/* binding */ appendTiles)
+/* harmony export */   "appendTiles": () => (/* binding */ appendTiles),
+/* harmony export */   "refreshTiles": () => (/* binding */ refreshTiles)
 /* harmony export */ });
 function appendTiles(gameBoardDOM, gameBoardObject) {
-  for (var i = 0; i < gameBoardObject.gameBoard.length; i++) {
+  for (var i = 0; i < gameBoardObject.tileArray.length; i++) {
     var tile = document.createElement('div');
     tile.classList.add('tile');
     tile.dataset.id = i;
+
+    if (gameBoardObject.tileArray[i].hasShip === true) {
+      tile.classList.add('hasShip');
+    }
+
     gameBoardDOM.appendChild(tile);
   }
 }
+function refreshTiles(gameBoardObject) {
+  var tiles = document.querySelectorAll('.tile');
+
+  for (var i = 0; i < gameBoardObject.tileArray.length; i++) {
+    if (gameBoardObject.tileArray[i].hasShip) tiles[i].classList.add('hasShip');
+
+    if (gameBoardObject.tileArray[i].isHit) {
+      if (gameBoardObject.tileArray[i].hasShip && gameBoardObject.tileArray[i].isHit) {
+        tiles[i].classList.add('hitShip');
+      } else {
+        tiles[i].classList.add('hit');
+      }
+    }
+  }
+}
+
+/***/ }),
+
+/***/ "./src/utils/utils.js":
+/*!****************************!*\
+  !*** ./src/utils/utils.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "utils": () => (/* binding */ utils)
+/* harmony export */ });
+function randomIntFromInterval(min, max) {
+  //
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function shipCanBePlaced(axis, boardIndex, shipLength) {
+  if (axis === 0) {
+    var shipsRear = boardIndex + (shipLength - 1) * returnPosOffset(0);
+
+    if (boardIndex >= 0 && boardIndex <= 9) {
+      return shipsRear > 9 ? false : true;
+    } else if (boardIndex >= 10 && boardIndex <= 19) {
+      return shipsRear > 19 ? false : true;
+    } else if (boardIndex >= 20 && boardIndex <= 29) {
+      return shipsRear > 29 ? false : true;
+    } else if (boardIndex >= 30 && boardIndex <= 39) {
+      return shipsRear > 39 ? false : true;
+    } else if (boardIndex >= 40 && boardIndex <= 49) {
+      return shipsRear > 49 ? false : true;
+    } else if (boardIndex >= 50 && boardIndex <= 59) {
+      return shipsRear > 59 ? false : true;
+    } else if (boardIndex >= 60 && boardIndex <= 69) {
+      return shipsRear > 69 ? false : true;
+    } else if (boardIndex >= 70 && boardIndex <= 79) {
+      return shipsRear > 79 ? false : true;
+    } else if (boardIndex >= 80 && boardIndex <= 89) {
+      return shipsRear > 89 ? false : true;
+    } else if (boardIndex >= 90 && boardIndex <= 99) {
+      return shipsRear > 99 ? false : true;
+    }
+  } else {// if (boardIndex )
+  }
+}
+
+function returnPosOffset(axis) {
+  if (axis === 0) {
+    return 1;
+  } else {
+    return 10;
+  }
+}
+
+var utils = {
+  randomIntFromInterval: randomIntFromInterval,
+  shipCanBePlaced: shipCanBePlaced,
+  returnPosOffset: returnPosOffset
+};
 
 /***/ }),
 
@@ -186,7 +333,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "* {\n  padding: 0;\n  margin: 0;\n}\n\nbody {\n  background-color: #272727;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.gameWindow {\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 100px;\n}\n.gameWindow .playerBoard,\n.gameWindow .aiBoard {\n  width: 500px;\n  height: 500px;\n  border: 1px solid white;\n  display: flex;\n  flex-wrap: wrap;\n  flex-shrink: 0;\n}\n.gameWindow .playerBoard .tile {\n  border: 1px solid rgba(255, 255, 255, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}\n.gameWindow .aiBoard {\n  border: 1px solid green;\n}\n.gameWindow .aiBoard .tile {\n  border: 1px solid rgba(0, 128, 0, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA;EACI,UAAA;EACA,SAAA;AACJ;;AAEA;EACI,yBAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;AACJ;;AAEA;EACI,aAAA;EACA,YAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,UAAA;AACJ;AACI;;EAEI,YAAA;EACA,aAAA;EACA,uBAAA;EACA,aAAA;EACA,eAAA;EACA,cAAA;AACR;AAGQ;EACI,4CAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AADZ;AAKI;EACI,uBAAA;AAHR;AAKQ;EACI,wCAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAHZ","sourcesContent":["* {\r\n    padding: 0;\r\n    margin: 0;\r\n}\r\n\r\nbody {\r\n    background-color: #272727;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.gameWindow {\r\n    height: 100vh;\r\n    width: 100vw;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 100px;\r\n\r\n    .playerBoard,\r\n    .aiBoard {\r\n        width: 500px;\r\n        height: 500px;\r\n        border: 1px solid white;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        flex-shrink: 0;\r\n    }\r\n\r\n    .playerBoard {\r\n        .tile {\r\n            border: 1px solid rgba(255, 255, 255, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n\r\n    .aiBoard {\r\n        border: 1px solid green;\r\n\r\n        .tile {\r\n            border: 1px solid rgba(0, 128, 0, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n* {\n  padding: 0;\n  margin: 0;\n}\n\nbody {\n  background-color: #272727;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.gameWindow {\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 100px;\n}\n.gameWindow .playerBoard,\n.gameWindow .aiBoard {\n  width: 500px;\n  height: 500px;\n  border: 1px solid white;\n  display: flex;\n  flex-wrap: wrap;\n  flex-shrink: 0;\n}\n.gameWindow .playerBoard .tile.hasShip,\n.gameWindow .aiBoard .tile.hasShip {\n  background: white;\n}\n.gameWindow .playerBoard .tile.hit:before,\n.gameWindow .aiBoard .tile.hit:before {\n  font-size: 3rem;\n  content: \"•\";\n  color: white;\n  position: relative;\n  left: 15px;\n  bottom: 5px;\n}\n.gameWindow .playerBoard .tile.hitShip:before,\n.gameWindow .aiBoard .tile.hitShip:before {\n  font-size: 3rem;\n  content: \"•\";\n  color: red;\n  position: relative;\n  left: 15px;\n  bottom: 5px;\n}\n.gameWindow .playerBoard .tile {\n  border: 1px solid rgba(255, 255, 255, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}\n.gameWindow .aiBoard {\n  border: 1px solid green;\n}\n.gameWindow .aiBoard .tile {\n  border: 1px solid rgba(0, 128, 0, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA,gBAAgB;AAAhB;EACI,UAAA;EACA,SAAA;AAEJ;;AACA;EACI,yBAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;AAEJ;;AACA;EACI,aAAA;EACA,YAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,UAAA;AAEJ;AAAI;;EAEI,YAAA;EACA,aAAA;EACA,uBAAA;EACA,aAAA;EACA,eAAA;EACA,cAAA;AAER;AAAQ;;EACI,iBAAA;AAGZ;AAAQ;;EACI,eAAA;EACA,YAAA;EACA,YAAA;EACA,kBAAA;EACA,UAAA;EACA,WAAA;AAGZ;AAAQ;;EACI,eAAA;EACA,YAAA;EACA,UAAA;EACA,kBAAA;EACA,UAAA;EACA,WAAA;AAGZ;AAEQ;EACI,4CAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAAZ;AAII;EACI,uBAAA;AAFR;AAIQ;EACI,wCAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAFZ","sourcesContent":["* {\r\n    padding: 0;\r\n    margin: 0;\r\n}\r\n\r\nbody {\r\n    background-color: #272727;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.gameWindow {\r\n    height: 100vh;\r\n    width: 100vw;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 100px;\r\n\r\n    .playerBoard,\r\n    .aiBoard {\r\n        width: 500px;\r\n        height: 500px;\r\n        border: 1px solid white;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        flex-shrink: 0;\r\n\r\n        .tile.hasShip {\r\n            background: white;\r\n        }\r\n\r\n        .tile.hit:before {\r\n            font-size: 3rem;\r\n            content: '•';\r\n            color: white;\r\n            position: relative;\r\n            left: 15px;\r\n            bottom: 5px;\r\n        }\r\n\r\n        .tile.hitShip:before {\r\n            font-size: 3rem;\r\n            content: '•';\r\n            color: red;\r\n            position: relative;\r\n            left: 15px;\r\n            bottom: 5px;\r\n        }\r\n    }\r\n\r\n    .playerBoard {\r\n        .tile {\r\n            border: 1px solid rgba(255, 255, 255, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n\r\n    .aiBoard {\r\n        border: 1px solid green;\r\n\r\n        .tile {\r\n            border: 1px solid rgba(0, 128, 0, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -790,11 +937,12 @@ __webpack_require__.r(__webpack_exports__);
 var playerBoard = document.querySelector('.playerBoard');
 var aiBoard = document.querySelector('.aiBoard');
 var gameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]();
-(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(playerBoard, gameBoard);
 var newCarrier = new _classes_Ship__WEBPACK_IMPORTED_MODULE_1__["default"]('Carrier');
-console.log(newCarrier);
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(playerBoard, gameBoard);
+gameBoard.randomPlacement();
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.refreshTiles)(gameBoard);
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main2915720565b486508926.js.map
+//# sourceMappingURL=maind212ee2fb2f6f6707693.js.map

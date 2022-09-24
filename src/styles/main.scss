@@ -26,6 +26,28 @@ body {
         display: flex;
         flex-wrap: wrap;
         flex-shrink: 0;
+
+        .tile.hasShip {
+            background: white;
+        }
+
+        .tile.hit:before {
+            font-size: 3rem;
+            content: '•';
+            color: white;
+            position: relative;
+            left: 15px;
+            bottom: 5px;
+        }
+
+        .tile.hitShip:before {
+            font-size: 3rem;
+            content: '•';
+            color: red;
+            position: relative;
+            left: 15px;
+            bottom: 5px;
+        }
     }
 
     .playerBoard {
@@ -49,10 +71,6 @@ body {
             margin: 0;
             box-sizing: border-box;
             user-select: none;
-        }
-
-        .tile.hasShip {
-            background: white;
         }
     }
 }

@@ -7,11 +7,11 @@ test('Append ship to gameboard', () => {
 
     gameboard.addShip(ship, [0, 1, 2, 3, 4]);
 
-    expect(gameboard.gameBoard[0]).toHaveProperty('hasShip', true);
-    expect(gameboard.gameBoard[1]).toHaveProperty('hasShip', true);
-    expect(gameboard.gameBoard[2]).toHaveProperty('hasShip', true);
-    expect(gameboard.gameBoard[3]).toHaveProperty('hasShip', true);
-    expect(gameboard.gameBoard[4]).toHaveProperty('hasShip', true);
+    expect(gameboard.tileArray[0]).toHaveProperty('hasShip', true);
+    expect(gameboard.tileArray[1]).toHaveProperty('hasShip', true);
+    expect(gameboard.tileArray[2]).toHaveProperty('hasShip', true);
+    expect(gameboard.tileArray[3]).toHaveProperty('hasShip', true);
+    expect(gameboard.tileArray[4]).toHaveProperty('hasShip', true);
 });
 
 test('Hit ship at specific position', () => {
@@ -22,7 +22,7 @@ test('Hit ship at specific position', () => {
 
     gameboard.hit(0);
 
-    expect(gameboard.gameBoard[0].ship.isHit).toEqual(true);
+    expect(gameboard.tileArray[0].ship.isHit).toEqual(true);
     expect(ship.hitTimes).toEqual(1);
 });
 
@@ -35,7 +35,7 @@ test('Missed shot', () => {
     gameboard.hit(5);
 
     expect(ship).toHaveProperty('hitTimes', 0);
-    expect(gameboard.gameBoard[5].isHit).toEqual(true);
+    expect(gameboard.tileArray[5].isHit).toEqual(true);
 });
 
 test('Sunking ship', () => {
