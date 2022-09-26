@@ -23,6 +23,4 @@ Live Preview:
 
 - [@TerroR75](https://github.com/TerroR75)
 
-## Credits
-- API access: https://openweathermap.org
 
