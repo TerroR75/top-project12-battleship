@@ -293,8 +293,23 @@ function shipCanBePlaced(axis, boardIndex, shipLength) {
       return shipsRear > 89 ? false : true;
     } else if (boardIndex >= 90 && boardIndex <= 99) {
       return shipsRear > 99 ? false : true;
+    } else {
+      return false;
     }
-  } else {// if (boardIndex )
+  } else {
+    var _shipsRear = boardIndex + (shipLength - 1) * returnPosOffset(10);
+
+    if (shipLength === 5) {
+      return boardIndex >= 60 ? false : true;
+    } else if (shipLength === 4) {
+      return boardIndex >= 70 ? false : true;
+    } else if (shipLength === 3) {
+      return boardIndex >= 80 ? false : true;
+    } else if (shipLength === 2) {
+      return boardIndex >= 90 ? false : true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -945,4 +960,4 @@ gameBoard.randomPlacement();
 
 /******/ })()
 ;
-//# sourceMappingURL=maind212ee2fb2f6f6707693.js.map
+//# sourceMappingURL=mainebfe10b960a93cea371f.js.map
