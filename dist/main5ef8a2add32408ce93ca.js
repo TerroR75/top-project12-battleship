@@ -230,25 +230,27 @@ function appendTiles(gameBoardDOM, gameBoardObject) {
     tile.classList.add('tile');
     tile.dataset.id = i;
 
-    if (gameBoardObject.tileArray[i].hasShip === true) {
-      tile.classList.add('hasShip');
-    }
-
-    if (gameBoardObject.tileArray[i].ship !== null) {
-      if (gameBoardObject.tileArray[i].ship.type === 'Carrier') {
-        tile.classList.add('carrier');
-      } else if (gameBoardObject.tileArray[i].ship.type === 'Battleship') {
-        tile.classList.add('battleship');
-      } else if (gameBoardObject.tileArray[i].ship.type === 'Destroyer') {
-        tile.classList.add('destroyer');
-      } else if (gameBoardObject.tileArray[i].ship.type === 'Submarine') {
-        tile.classList.add('submarine');
-      } else {
-        tile.classList.add('patrol-boat');
+    if (gameBoardObject.player !== 'ai') {
+      if (gameBoardObject.tileArray[i].hasShip === true) {
+        tile.classList.add('hasShip');
       }
-    }
 
-    console.log(gameBoardObject.tileArray[i]);
+      if (gameBoardObject.tileArray[i].ship !== null) {
+        if (gameBoardObject.tileArray[i].ship.type === 'Carrier') {
+          tile.classList.add('carrier');
+        } else if (gameBoardObject.tileArray[i].ship.type === 'Battleship') {
+          tile.classList.add('battleship');
+        } else if (gameBoardObject.tileArray[i].ship.type === 'Destroyer') {
+          tile.classList.add('destroyer');
+        } else if (gameBoardObject.tileArray[i].ship.type === 'Submarine') {
+          tile.classList.add('submarine');
+        } else {
+          tile.classList.add('patrol-boat');
+        }
+      }
+    } // console.log(gameBoardObject.tileArray[i]);
+
+
     gameBoardDOM.appendChild(tile);
   }
 }
@@ -364,7 +366,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n* {\n  padding: 0;\n  margin: 0;\n}\n\nbody {\n  background-color: #272727;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.gameWindow {\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 100px;\n}\n.gameWindow .playerBoard,\n.gameWindow .aiBoard {\n  width: 500px;\n  height: 500px;\n  border: 1px solid white;\n  display: flex;\n  flex-wrap: wrap;\n  flex-shrink: 0;\n}\n.gameWindow .playerBoard .tile.hasShip,\n.gameWindow .aiBoard .tile.hasShip {\n  background: white;\n}\n.gameWindow .playerBoard .tile.hit:before,\n.gameWindow .aiBoard .tile.hit:before {\n  font-size: 3rem;\n  content: \"•\";\n  color: white;\n  position: relative;\n  left: 15px;\n  bottom: 5px;\n}\n.gameWindow .playerBoard .tile.hitShip:before,\n.gameWindow .aiBoard .tile.hitShip:before {\n  font-size: 3rem;\n  content: \"•\";\n  color: red;\n  position: relative;\n  left: 15px;\n  bottom: 5px;\n}\n.gameWindow .playerBoard .tile {\n  border: 1px solid rgba(255, 255, 255, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}\n.gameWindow .playerBoard .carrier {\n  background: rgb(255, 255, 255) !important;\n}\n.gameWindow .playerBoard .battleship {\n  background: rgb(230, 230, 230) !important;\n}\n.gameWindow .playerBoard .destroyer {\n  background: rgb(210, 210, 210) !important;\n}\n.gameWindow .playerBoard .submarine {\n  background: rgb(190, 190, 190) !important;\n}\n.gameWindow .playerBoard .patrol-boat {\n  background: rgb(170, 170, 170) !important;\n}\n.gameWindow .aiBoard {\n  border: 1px solid green;\n}\n.gameWindow .aiBoard .tile {\n  border: 1px solid rgba(0, 128, 0, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA,gBAAgB;AAAhB;EACI,UAAA;EACA,SAAA;AAEJ;;AACA;EACI,yBAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;AAEJ;;AACA;EACI,aAAA;EACA,YAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,UAAA;AAEJ;AAAI;;EAEI,YAAA;EACA,aAAA;EACA,uBAAA;EACA,aAAA;EACA,eAAA;EACA,cAAA;AAER;AAAQ;;EACI,iBAAA;AAGZ;AAEQ;;EACI,eAAA;EACA,YAAA;EACA,YAAA;EACA,kBAAA;EACA,UAAA;EACA,WAAA;AACZ;AAEQ;;EACI,eAAA;EACA,YAAA;EACA,UAAA;EACA,kBAAA;EACA,UAAA;EACA,WAAA;AACZ;AAIQ;EACI,4CAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAFZ;AAKQ;EACI,yCAAA;AAHZ;AAMQ;EACI,yCAAA;AAJZ;AAOQ;EACI,yCAAA;AALZ;AAQQ;EACI,yCAAA;AANZ;AASQ;EACI,yCAAA;AAPZ;AAWI;EACI,uBAAA;AATR;AAWQ;EACI,wCAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AATZ","sourcesContent":["* {\r\n    padding: 0;\r\n    margin: 0;\r\n}\r\n\r\nbody {\r\n    background-color: #272727;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.gameWindow {\r\n    height: 100vh;\r\n    width: 100vw;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 100px;\r\n\r\n    .playerBoard,\r\n    .aiBoard {\r\n        width: 500px;\r\n        height: 500px;\r\n        border: 1px solid white;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        flex-shrink: 0;\r\n\r\n        .tile.hasShip {\r\n            background: white;\r\n\r\n\r\n        }\r\n\r\n        .tile.hit:before {\r\n            font-size: 3rem;\r\n            content: '•';\r\n            color: white;\r\n            position: relative;\r\n            left: 15px;\r\n            bottom: 5px;\r\n        }\r\n\r\n        .tile.hitShip:before {\r\n            font-size: 3rem;\r\n            content: '•';\r\n            color: red;\r\n            position: relative;\r\n            left: 15px;\r\n            bottom: 5px;\r\n        }\r\n    }\r\n\r\n    .playerBoard {\r\n        .tile {\r\n            border: 1px solid rgba(255, 255, 255, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n\r\n        .carrier {\r\n            background: rgb(255, 255, 255) !important;\r\n        }\r\n\r\n        .battleship {\r\n            background: rgb(230, 230, 230) !important;\r\n        }\r\n\r\n        .destroyer {\r\n            background: rgb(210, 210, 210) !important;\r\n        }\r\n\r\n        .submarine {\r\n            background: rgb(190, 190, 190) !important;\r\n        }\r\n\r\n        .patrol-boat {\r\n            background: rgb(170, 170, 170) !important;\r\n        }\r\n    }\r\n\r\n    .aiBoard {\r\n        border: 1px solid green;\r\n\r\n        .tile {\r\n            border: 1px solid rgba(0, 128, 0, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@charset \"UTF-8\";\n* {\n  padding: 0;\n  margin: 0;\n}\n\nbody {\n  background-color: #272727;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.gameWindow {\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 100px;\n}\n.gameWindow .playerBoard,\n.gameWindow .aiBoard {\n  width: 500px;\n  height: 500px;\n  border: 1px solid white;\n  display: flex;\n  flex-wrap: wrap;\n  flex-shrink: 0;\n}\n.gameWindow .playerBoard .tile.hit:before,\n.gameWindow .aiBoard .tile.hit:before {\n  font-size: 3rem;\n  content: \"•\";\n  color: white;\n  position: relative;\n  left: 15px;\n  bottom: 5px;\n}\n.gameWindow .playerBoard .tile.hitShip:before,\n.gameWindow .aiBoard .tile.hitShip:before {\n  font-size: 3rem;\n  content: \"•\";\n  color: red;\n  position: relative;\n  left: 15px;\n  bottom: 5px;\n}\n.gameWindow .playerBoard .tile {\n  border: 1px solid rgba(255, 255, 255, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}\n.gameWindow .playerBoard .carrier {\n  background: rgb(255, 255, 255) !important;\n}\n.gameWindow .playerBoard .battleship {\n  background: rgb(230, 230, 230) !important;\n}\n.gameWindow .playerBoard .destroyer {\n  background: rgb(210, 210, 210) !important;\n}\n.gameWindow .playerBoard .submarine {\n  background: rgb(190, 190, 190) !important;\n}\n.gameWindow .playerBoard .patrol-boat {\n  background: rgb(170, 170, 170) !important;\n}\n.gameWindow .aiBoard {\n  border: 1px solid green;\n}\n.gameWindow .aiBoard .tile {\n  border: 1px solid rgba(0, 128, 0, 0.377);\n  width: 50px;\n  height: 50px;\n  margin: 0;\n  box-sizing: border-box;\n  user-select: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA,gBAAgB;AAAhB;EACI,UAAA;EACA,SAAA;AAEJ;;AACA;EACI,yBAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;AAEJ;;AACA;EACI,aAAA;EACA,YAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,UAAA;AAEJ;AAAI;;EAEI,YAAA;EACA,aAAA;EACA,uBAAA;EACA,aAAA;EACA,eAAA;EACA,cAAA;AAER;AAAQ;;EACI,eAAA;EACA,YAAA;EACA,YAAA;EACA,kBAAA;EACA,UAAA;EACA,WAAA;AAGZ;AAAQ;;EACI,eAAA;EACA,YAAA;EACA,UAAA;EACA,kBAAA;EACA,UAAA;EACA,WAAA;AAGZ;AAEQ;EACI,4CAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAAZ;AAGQ;EACI,yCAAA;AADZ;AAIQ;EACI,yCAAA;AAFZ;AAKQ;EACI,yCAAA;AAHZ;AAMQ;EACI,yCAAA;AAJZ;AAOQ;EACI,yCAAA;AALZ;AASI;EACI,uBAAA;AAPR;AASQ;EACI,wCAAA;EACA,WAAA;EACA,YAAA;EACA,SAAA;EACA,sBAAA;EACA,iBAAA;AAPZ","sourcesContent":["* {\r\n    padding: 0;\r\n    margin: 0;\r\n}\r\n\r\nbody {\r\n    background-color: #272727;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.gameWindow {\r\n    height: 100vh;\r\n    width: 100vw;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    gap: 100px;\r\n\r\n    .playerBoard,\r\n    .aiBoard {\r\n        width: 500px;\r\n        height: 500px;\r\n        border: 1px solid white;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        flex-shrink: 0;\r\n\r\n        .tile.hit:before {\r\n            font-size: 3rem;\r\n            content: '•';\r\n            color: white;\r\n            position: relative;\r\n            left: 15px;\r\n            bottom: 5px;\r\n        }\r\n\r\n        .tile.hitShip:before {\r\n            font-size: 3rem;\r\n            content: '•';\r\n            color: red;\r\n            position: relative;\r\n            left: 15px;\r\n            bottom: 5px;\r\n        }\r\n    }\r\n\r\n    .playerBoard {\r\n        .tile {\r\n            border: 1px solid rgba(255, 255, 255, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n\r\n        .carrier {\r\n            background: rgb(255, 255, 255) !important;\r\n        }\r\n\r\n        .battleship {\r\n            background: rgb(230, 230, 230) !important;\r\n        }\r\n\r\n        .destroyer {\r\n            background: rgb(210, 210, 210) !important;\r\n        }\r\n\r\n        .submarine {\r\n            background: rgb(190, 190, 190) !important;\r\n        }\r\n\r\n        .patrol-boat {\r\n            background: rgb(170, 170, 170) !important;\r\n        }\r\n    }\r\n\r\n    .aiBoard {\r\n        border: 1px solid green;\r\n\r\n        .tile {\r\n            border: 1px solid rgba(0, 128, 0, 0.377);\r\n            width: 50px;\r\n            height: 50px;\r\n            margin: 0;\r\n            box-sizing: border-box;\r\n            user-select: none;\r\n        }\r\n    }\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -968,12 +970,14 @@ __webpack_require__.r(__webpack_exports__);
 var playerBoard = document.querySelector('.playerBoard');
 var aiBoard = document.querySelector('.aiBoard');
 var gameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('player');
-var newCarrier = new _classes_Ship__WEBPACK_IMPORTED_MODULE_1__["default"]('Carrier');
 gameBoard.randomPlacement();
 (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(playerBoard, gameBoard);
 (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.refreshTiles)(gameBoard);
+var gameBoardAi = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('ai');
+gameBoardAi.randomPlacement();
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(aiBoard, gameBoardAi);
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main1fe1f68da107e9e332fc.js.map
+//# sourceMappingURL=main5ef8a2add32408ce93ca.js.map

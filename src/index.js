@@ -8,7 +8,6 @@ export const playerBoard = document.querySelector('.playerBoard');
 export const aiBoard = document.querySelector('.aiBoard');
 
 const gameBoard = new GameBoard('player');
-const newCarrier = new Ship('Carrier');
 
 
 
@@ -17,3 +16,7 @@ gameBoard.randomPlacement();
 appendTiles(playerBoard, gameBoard);
 
 refreshTiles(gameBoard);
+
+const gameBoardAi = new GameBoard('ai');
+gameBoardAi.randomPlacement();
+appendTiles(aiBoard, gameBoardAi);
