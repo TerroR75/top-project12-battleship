@@ -35,19 +35,37 @@ export function appendTiles(gameBoardDOM, gameBoardObject) {
     }
 }
 
-export function refreshTiles(gameBoardObject) {
-    const tiles = document.querySelectorAll('.aiBoard .tile');
+export function refreshTiles(gameBoardObject, player) {
+    const aiTiles = document.querySelectorAll('.aiBoard .tile');
+    const playerTiles = document.querySelectorAll('.playerBoard .tile');
 
-    for (let i = 0; i < gameBoardObject.tileArray.length; i++) {
-        if (gameBoardObject.tileArray[i].hasShip) tiles[i].classList.add('hasShip');
+    if (player === 'ai') {
+        for (let i = 0; i < gameBoardObject.tileArray.length; i++) {
+            if (gameBoardObject.tileArray[i].hasShip) aiTiles[i].classList.add('hasShip');
 
-        if (gameBoardObject.tileArray[i].isHit) {
-            if (gameBoardObject.tileArray[i].hasShip && gameBoardObject.tileArray[i].isHit) {
-                tiles[i].classList.add('hitShip');
-            }
-            else {
-                tiles[i].classList.add('hit');
+            if (gameBoardObject.tileArray[i].isHit) {
+                if (gameBoardObject.tileArray[i].hasShip && gameBoardObject.tileArray[i].isHit) {
+                    aiTiles[i].classList.add('hitShip');
+                }
+                else {
+                    aiTiles[i].classList.add('hit');
+                }
             }
         }
     }
+    else {
+        for (let i = 0; i < gameBoardObject.tileArray.length; i++) {
+            if (gameBoardObject.tileArray[i].hasShip) playerTiles[i].classList.add('hasShip');
+
+            if (gameBoardObject.tileArray[i].isHit) {
+                if (gameBoardObject.tileArray[i].hasShip && gameBoardObject.tileArray[i].isHit) {
+                    playerTiles[i].classList.add('hitShip');
+                }
+                else {
+                    playerTiles[i].classList.add('hit');
+                }
+            }
+        }
+    }
+
 }

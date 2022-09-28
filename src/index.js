@@ -10,7 +10,9 @@ export const gameManager = new GameManager();
 
 export const playerBoardDOM = document.querySelector('.playerBoard');
 export const aiBoardDOM = document.querySelector('.aiBoard');
-const announcer = document.querySelector('.announcer');
+export const announcer = document.querySelector('.announcer');
+
+console.log(announcer);
 
 gameManager.humanGameBoard.randomPlacement();
 gameManager.aiGameBoard.randomPlacement();
@@ -20,10 +22,5 @@ appendTiles(aiBoardDOM, gameManager.aiGameBoard);
 
 const aiTiles = document.querySelectorAll('.aiBoard .tile');
 
-refreshTiles(gameManager.humanGameBoard)
-
+refreshTiles(gameManager.humanGameBoard, 'player')
 aiMouseEvents(aiTiles);
-
-while (gameManager.gameOver === true) {
-    // game loop
-}

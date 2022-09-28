@@ -7,22 +7,31 @@ export function aiMouseEvents(tiles) {
 }
 
 function mouseOver(tiles) {
-    tiles.forEach(tile => {
-        tile.addEventListener('mouseenter', () => {
-            tile.classList.toggle('mouse-over');
-        })
-        tile.addEventListener('mouseout', () => {
-            tile.classList.toggle('mouse-over');
-        })
-    });
+    if (gameManager.humanTurn === true) {
+        tiles.forEach(tile => {
+            tile.addEventListener('mouseenter', () => {
+                tile.classList.toggle('mouse-over');
+
+            })
+            tile.addEventListener('mouseout', () => {
+                tile.classList.toggle('mouse-over');
+            })
+        });
+    }
+
 }
 
 function mouseClick(tiles) {
     tiles.forEach(tile => {
         tile.addEventListener('click', () => {
-            gameManager.aiGameBoard.tileArray[tile.dataset.id].isHit = true;
-            refreshTiles(gameManager.aiGameBoard);
-            console.log(gameManager.aiGameBoard.tileArray[tile.dataset.id])
+            if (gameManager.humanTurn === true && !tile.classList.contains('hit')) {
+                gameManager.aiGameBoard.tileArray[tile.dataset.id].isHit = true;
+                refreshTiles(gameManager.aiGameBoard, 'ai');
+                gameManager.aiGameBoard.hit(parseInt(tile.dataset.id));
+                gameManager.humanTurn = false;
+
+                gameManager.aiTurn();
+            }
         })
     });
 }

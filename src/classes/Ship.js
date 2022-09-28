@@ -18,8 +18,14 @@ export default class Ship {
         }
     }
 
-    hit() {
+    hit(index) {
         this.hitTimes += 1;
+
+        for (let pos of this.position) {
+            if (pos.pos === index) {
+                pos.isHit = true;
+            }
+        }
 
         this.checkIfSunken();
     }

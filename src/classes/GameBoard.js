@@ -15,6 +15,12 @@ export default class GameBoard {
     }
 
     hit(index) {
+        if (this.tileArray[index].hasShip) {
+            this.tileArray[index].ship.isHit = true;
+            this.tileArray[index].ship.hit(index);
+
+            console.log(this);
+        }
         if (this.tileArray[index].isHit === true) {
             return;
         }
@@ -22,11 +28,7 @@ export default class GameBoard {
             this.tileArray[index].isHit = true;
         }
 
-
-        if (this.tileArray[index].hasShip) {
-            this.tileArray[index].ship.isHit = true;
-            this.tileArray[index].ship.hit();
-        }
+        // console.log(this.tileArray);
     }
 
     randomPlacement() {

@@ -56,16 +56,18 @@ var GameBoard = /*#__PURE__*/function () {
   }, {
     key: "hit",
     value: function hit(index) {
+      if (this.tileArray[index].hasShip) {
+        this.tileArray[index].ship.isHit = true;
+        this.tileArray[index].ship.hit(index);
+        console.log(this);
+      }
+
       if (this.tileArray[index].isHit === true) {
         return;
       } else {
         this.tileArray[index].isHit = true;
-      }
+      } // console.log(this.tileArray);
 
-      if (this.tileArray[index].hasShip) {
-        this.tileArray[index].ship.isHit = true;
-        this.tileArray[index].ship.hit();
-      }
     }
   }, {
     key: "randomPlacement",
@@ -149,6 +151,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Ship)
 /* harmony export */ });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -191,8 +199,26 @@ var Ship = /*#__PURE__*/function () {
     }
   }, {
     key: "hit",
-    value: function hit() {
+    value: function hit(index) {
       this.hitTimes += 1;
+
+      var _iterator = _createForOfIteratorHelper(this.position),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var pos = _step.value;
+
+          if (pos.pos === index) {
+            pos.isHit = true;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
       this.checkIfSunken();
     }
   }, {
@@ -233,22 +259,28 @@ function aiMouseEvents(tiles) {
 }
 
 function mouseOver(tiles) {
-  tiles.forEach(function (tile) {
-    tile.addEventListener('mouseenter', function () {
-      tile.classList.toggle('mouse-over');
+  if (_index__WEBPACK_IMPORTED_MODULE_1__.gameManager.humanTurn === true) {
+    tiles.forEach(function (tile) {
+      tile.addEventListener('mouseenter', function () {
+        tile.classList.toggle('mouse-over');
+      });
+      tile.addEventListener('mouseout', function () {
+        tile.classList.toggle('mouse-over');
+      });
     });
-    tile.addEventListener('mouseout', function () {
-      tile.classList.toggle('mouse-over');
-    });
-  });
+  }
 }
 
 function mouseClick(tiles) {
   tiles.forEach(function (tile) {
     tile.addEventListener('click', function () {
-      _index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiGameBoard.tileArray[tile.dataset.id].isHit = true;
-      (0,_GameBoard__WEBPACK_IMPORTED_MODULE_0__.refreshTiles)(_index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiGameBoard);
-      console.log(_index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiGameBoard.tileArray[tile.dataset.id]);
+      if (_index__WEBPACK_IMPORTED_MODULE_1__.gameManager.humanTurn === true && !tile.classList.contains('hit')) {
+        _index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiGameBoard.tileArray[tile.dataset.id].isHit = true;
+        (0,_GameBoard__WEBPACK_IMPORTED_MODULE_0__.refreshTiles)(_index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiGameBoard, 'ai');
+        _index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiGameBoard.hit(parseInt(tile.dataset.id));
+        _index__WEBPACK_IMPORTED_MODULE_1__.gameManager.humanTurn = false;
+        _index__WEBPACK_IMPORTED_MODULE_1__.gameManager.aiTurn();
+      }
     });
   });
 }
@@ -296,17 +328,32 @@ function appendTiles(gameBoardDOM, gameBoardObject) {
     gameBoardDOM.appendChild(tile);
   }
 }
-function refreshTiles(gameBoardObject) {
-  var tiles = document.querySelectorAll('.aiBoard .tile');
+function refreshTiles(gameBoardObject, player) {
+  var aiTiles = document.querySelectorAll('.aiBoard .tile');
+  var playerTiles = document.querySelectorAll('.playerBoard .tile');
 
-  for (var i = 0; i < gameBoardObject.tileArray.length; i++) {
-    if (gameBoardObject.tileArray[i].hasShip) tiles[i].classList.add('hasShip');
+  if (player === 'ai') {
+    for (var i = 0; i < gameBoardObject.tileArray.length; i++) {
+      if (gameBoardObject.tileArray[i].hasShip) aiTiles[i].classList.add('hasShip');
 
-    if (gameBoardObject.tileArray[i].isHit) {
-      if (gameBoardObject.tileArray[i].hasShip && gameBoardObject.tileArray[i].isHit) {
-        tiles[i].classList.add('hitShip');
-      } else {
-        tiles[i].classList.add('hit');
+      if (gameBoardObject.tileArray[i].isHit) {
+        if (gameBoardObject.tileArray[i].hasShip && gameBoardObject.tileArray[i].isHit) {
+          aiTiles[i].classList.add('hitShip');
+        } else {
+          aiTiles[i].classList.add('hit');
+        }
+      }
+    }
+  } else {
+    for (var _i = 0; _i < gameBoardObject.tileArray.length; _i++) {
+      if (gameBoardObject.tileArray[_i].hasShip) playerTiles[_i].classList.add('hasShip');
+
+      if (gameBoardObject.tileArray[_i].isHit) {
+        if (gameBoardObject.tileArray[_i].hasShip && gameBoardObject.tileArray[_i].isHit) {
+          playerTiles[_i].classList.add('hitShip');
+        } else {
+          playerTiles[_i].classList.add('hit');
+        }
       }
     }
   }
@@ -325,22 +372,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ GameManager)
 /* harmony export */ });
 /* harmony import */ var _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/GameBoard */ "./src/classes/GameBoard.js");
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/utils */ "./src/utils/utils.js");
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../index.js */ "./src/index.js");
+/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../domManip/GameBoard */ "./src/domManip/GameBoard.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
 
 
 
-var GameManager = /*#__PURE__*/_createClass(function GameManager() {
-  _classCallCheck(this, GameManager);
 
-  this.humanTurn = true;
-  this.humanGameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('player');
-  this.aiGameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('ai');
-  this.gameOver = false;
-});
+
+
+var _canShoot = /*#__PURE__*/new WeakSet();
+
+var GameManager = /*#__PURE__*/function () {
+  function GameManager() {
+    _classCallCheck(this, GameManager);
+
+    _classPrivateMethodInitSpec(this, _canShoot);
+
+    this.humanTurn = true;
+    this.humanGameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('player');
+    this.aiGameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('ai');
+    this.gameOver = false;
+  } // AI related
+
+
+  _createClass(GameManager, [{
+    key: "aiTurn",
+    value: function aiTurn() {
+      var _this = this;
+
+      var randomArrayIndex = _utils_utils__WEBPACK_IMPORTED_MODULE_1__.utils.randomIntFromInterval(0, 99);
+      _index_js__WEBPACK_IMPORTED_MODULE_2__.announcer.innerText = 'AI turn!';
+      setTimeout(function () {
+        _this.humanGameBoard.hit(randomArrayIndex);
+
+        (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.refreshTiles)(_this.humanGameBoard, 'player');
+        _this.humanTurn = true;
+        _index_js__WEBPACK_IMPORTED_MODULE_2__.announcer.innerText = 'Your turn!';
+      }, 2000);
+    }
+  }]);
+
+  return GameManager;
+}();
+
+function _canShoot2(index) {}
 
 
 
@@ -355,6 +440,7 @@ var GameManager = /*#__PURE__*/_createClass(function GameManager() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "aiBoardDOM": () => (/* binding */ aiBoardDOM),
+/* harmony export */   "announcer": () => (/* binding */ announcer),
 /* harmony export */   "gameManager": () => (/* binding */ gameManager),
 /* harmony export */   "playerBoardDOM": () => (/* binding */ playerBoardDOM)
 /* harmony export */ });
@@ -374,16 +460,14 @@ var gameManager = new _functionality_gameManager__WEBPACK_IMPORTED_MODULE_0__["d
 var playerBoardDOM = document.querySelector('.playerBoard');
 var aiBoardDOM = document.querySelector('.aiBoard');
 var announcer = document.querySelector('.announcer');
+console.log(announcer);
 gameManager.humanGameBoard.randomPlacement();
 gameManager.aiGameBoard.randomPlacement();
 (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.appendTiles)(playerBoardDOM, gameManager.humanGameBoard);
 (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.appendTiles)(aiBoardDOM, gameManager.aiGameBoard);
 var aiTiles = document.querySelectorAll('.aiBoard .tile');
-(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.refreshTiles)(gameManager.humanGameBoard);
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.refreshTiles)(gameManager.humanGameBoard, 'player');
 (0,_domManip_DOMMouseEvents__WEBPACK_IMPORTED_MODULE_5__.aiMouseEvents)(aiTiles);
-
-while (gameManager.gameOver === true) {// game loop
-}
 
 /***/ }),
 
@@ -1071,4 +1155,4 @@ module.exports = styleTagTransform;
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=main1eeccdfe7bfce80e7d88.js.map
+//# sourceMappingURL=main0fac30f8b5cf805d99de.js.map
