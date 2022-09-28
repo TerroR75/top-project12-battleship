@@ -8,6 +8,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.announcer {
+    font-size: 2rem;
+    color: white;
+    position: absolute;
+    top: 70px;
+    width: 50%;
+    text-align: center;
 }
 
 .gameWindow {
@@ -87,6 +98,11 @@ body {
             margin: 0;
             box-sizing: border-box;
             user-select: none;
+            cursor: pointer;
+        }
+
+        .mouse-over {
+            background: rgba(0, 128, 0, 0.459)
         }
     }
 }

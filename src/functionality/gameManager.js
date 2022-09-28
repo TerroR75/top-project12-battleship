@@ -1,9 +1,10 @@
 import GameBoard from "../classes/GameBoard";
 
-class GameManager {
+export default class GameManager {
     constructor() {
-        this.currentPlayer = 'player';
+        this.humanTurn = true;
         this.humanGameBoard = new GameBoard('player');
         this.aiGameBoard = new GameBoard('ai');
+        this.gameOver = false;
     }
 }
