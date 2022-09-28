@@ -50,7 +50,7 @@ body {
         .tile.hitShip:before {
             font-size: 3rem;
             content: '•';
-            color: red;
+            color: red !important;
             position: relative;
             left: 15px;
             bottom: 5px;

@@ -36,7 +36,7 @@ export function appendTiles(gameBoardDOM, gameBoardObject) {
 }
 
 export function refreshTiles(gameBoardObject) {
-    const tiles = document.querySelectorAll('.tile');
+    const tiles = document.querySelectorAll('.aiBoard .tile');
 
     for (let i = 0; i < gameBoardObject.tileArray.length; i++) {
         if (gameBoardObject.tileArray[i].hasShip) tiles[i].classList.add('hasShip');
