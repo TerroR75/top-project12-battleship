@@ -29,6 +29,8 @@ body {
 
         .tile.hasShip {
             background: white;
+
+
         }
 
         .tile.hit:before {
@@ -58,6 +60,26 @@ body {
             margin: 0;
             box-sizing: border-box;
             user-select: none;
+        }
+
+        .carrier {
+            background: rgb(255, 255, 255) !important;
+        }
+
+        .battleship {
+            background: rgb(230, 230, 230) !important;
+        }
+
+        .destroyer {
+            background: rgb(210, 210, 210) !important;
+        }
+
+        .submarine {
+            background: rgb(190, 190, 190) !important;
+        }
+
+        .patrol-boat {
+            background: rgb(170, 170, 170) !important;
         }
     }
 

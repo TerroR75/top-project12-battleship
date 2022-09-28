@@ -7,12 +7,13 @@ import { appendTiles, refreshTiles } from "./domManip/GameBoard";
 export const playerBoard = document.querySelector('.playerBoard');
 export const aiBoard = document.querySelector('.aiBoard');
 
-const gameBoard = new GameBoard();
+const gameBoard = new GameBoard('player');
 const newCarrier = new Ship('Carrier');
 
 
-appendTiles(playerBoard, gameBoard);
 
 gameBoard.randomPlacement();
+
+appendTiles(playerBoard, gameBoard);
 
 refreshTiles(gameBoard);

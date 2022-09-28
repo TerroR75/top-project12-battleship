@@ -8,6 +8,26 @@ export function appendTiles(gameBoardDOM, gameBoardObject) {
             tile.classList.add('hasShip');
         }
 
+        if (gameBoardObject.tileArray[i].ship !== null) {
+            if (gameBoardObject.tileArray[i].ship.type === 'Carrier') {
+                tile.classList.add('carrier');
+            }
+            else if (gameBoardObject.tileArray[i].ship.type === 'Battleship') {
+                tile.classList.add('battleship');
+            }
+            else if (gameBoardObject.tileArray[i].ship.type === 'Destroyer') {
+                tile.classList.add('destroyer');
+            }
+            else if (gameBoardObject.tileArray[i].ship.type === 'Submarine') {
+                tile.classList.add('submarine');
+            }
+            else {
+                tile.classList.add('patrol-boat');
+            }
+        }
+
+        console.log(gameBoardObject.tileArray[i]);
+
         gameBoardDOM.appendChild(tile);
     }
 }

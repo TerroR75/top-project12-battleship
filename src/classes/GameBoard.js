@@ -2,9 +2,10 @@ import Ship from "./Ship";
 import { utils } from '../utils/utils';
 
 export default class GameBoard {
-    constructor() {
+    constructor(humanOrAi) {
         this.tileArray = [];
         this.init();
+        this.player = humanOrAi;
     }
 
     init() {
@@ -28,18 +29,10 @@ export default class GameBoard {
         }
     }
 
-    addShip(ship, positions) {
-        for (let i = 0; i < ship.length; i++) {
-            ship.position.push({ pos: positions[i], isHit: false });
-
-            this.tileArray[positions[i]].hasShip = true;
-            this.tileArray[positions[i]].ship = ship;
-        }
-    }
-
-
     randomPlacement() {
         const ships = this.#generateShips();
+
+        console.log(ships);
 
         for (let i = 0; i < ships.length; i++) {
             let axis = utils.randomIntFromInterval(0, 1); // 0 - Horizontal, 1 - Vertical
@@ -61,6 +54,7 @@ export default class GameBoard {
                     i--;
                 }
                 else {
+
                     this.addShip(ships[i], positions);
                 }
 
@@ -69,7 +63,16 @@ export default class GameBoard {
                 i--;
             }
         }
-        console.log(this.tileArray);
+    }
+
+    addShip(ship, positions) {
+
+        for (let i = 0; i < ship.length; i++) {
+            ship.position.push({ pos: positions[i], isHit: false });
+
+            this.tileArray[positions[i]].hasShip = true;
+            this.tileArray[positions[i]].ship = ship;
+        }
     }
 
     #generateShips() {
