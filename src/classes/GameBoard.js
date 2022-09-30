@@ -14,10 +14,14 @@ export default class GameBoard {
         }
     }
 
-    hit(index) {
+    hit(index, aiObject = null) {
         if (this.tileArray[index].hasShip) {
             this.tileArray[index].ship.isHit = true;
             this.tileArray[index].ship.hit(index);
+
+            if (aiObject !== null) {
+                aiObject.lastSuccessHit = index;
+            }
 
             console.log(this);
         }

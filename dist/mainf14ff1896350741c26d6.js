@@ -2,6 +2,69 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/classes/AI.js":
+/*!***************************!*\
+  !*** ./src/classes/AI.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Ai)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
+function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+
+var _definePossibleHitArray = /*#__PURE__*/new WeakSet();
+
+var Ai = /*#__PURE__*/function () {
+  function Ai() {
+    _classCallCheck(this, Ai);
+
+    _classPrivateMethodInitSpec(this, _definePossibleHitArray);
+
+    this.possibleHitPositions = _classPrivateMethodGet(this, _definePossibleHitArray, _definePossibleHitArray2).call(this);
+    this.lastSuccessHit = undefined;
+  }
+
+  _createClass(Ai, [{
+    key: "removePositionFromArray",
+    value: function removePositionFromArray(pos) {
+      for (var i = 0; i < this.possibleHitPositions.length; i++) {
+        if (pos === this.possibleHitPositions[i]) {
+          this.possibleHitPositions.splice(i, 1);
+          break;
+        }
+      }
+    }
+  }]);
+
+  return Ai;
+}();
+
+function _definePossibleHitArray2() {
+  var array = [];
+
+  for (var i = 0; i < 100; i++) {
+    array.push(i);
+  }
+
+  return array;
+}
+
+
+
+/***/ }),
+
 /***/ "./src/classes/GameBoard.js":
 /*!**********************************!*\
   !*** ./src/classes/GameBoard.js ***!
@@ -56,9 +119,16 @@ var GameBoard = /*#__PURE__*/function () {
   }, {
     key: "hit",
     value: function hit(index) {
+      var aiObject = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
       if (this.tileArray[index].hasShip) {
         this.tileArray[index].ship.isHit = true;
         this.tileArray[index].ship.hit(index);
+
+        if (aiObject !== null) {
+          aiObject.lastSuccessHit = index;
+        }
+
         console.log(this);
       }
 
@@ -372,9 +442,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ GameManager)
 /* harmony export */ });
 /* harmony import */ var _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/GameBoard */ "./src/classes/GameBoard.js");
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/utils */ "./src/utils/utils.js");
-/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../index.js */ "./src/index.js");
-/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../domManip/GameBoard */ "./src/domManip/GameBoard.js");
+/* harmony import */ var _classes_AI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/AI */ "./src/classes/AI.js");
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/utils */ "./src/utils/utils.js");
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../index.js */ "./src/index.js");
+/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../domManip/GameBoard */ "./src/domManip/GameBoard.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -384,6 +455,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
 
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
 
 
 
@@ -402,6 +474,7 @@ var GameManager = /*#__PURE__*/function () {
     this.humanGameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('player');
     this.aiGameBoard = new _classes_GameBoard__WEBPACK_IMPORTED_MODULE_0__["default"]('ai');
     this.gameOver = false;
+    this.ai = new _classes_AI__WEBPACK_IMPORTED_MODULE_1__["default"]();
   } // AI related
 
 
@@ -410,14 +483,17 @@ var GameManager = /*#__PURE__*/function () {
     value: function aiTurn() {
       var _this = this;
 
-      var randomArrayIndex = _utils_utils__WEBPACK_IMPORTED_MODULE_1__.utils.randomIntFromInterval(0, 99);
-      _index_js__WEBPACK_IMPORTED_MODULE_2__.announcer.innerText = 'AI turn!';
+      var randomArrayIndex = this.ai.possibleHitPositions[_utils_utils__WEBPACK_IMPORTED_MODULE_2__.utils.randomIntFromInterval(0, this.ai.possibleHitPositions.length - 1)];
+      _index_js__WEBPACK_IMPORTED_MODULE_3__.announcer.innerText = 'AI turn!';
       setTimeout(function () {
-        _this.humanGameBoard.hit(randomArrayIndex);
+        _this.humanGameBoard.hit(randomArrayIndex, _this.ai);
 
-        (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.refreshTiles)(_this.humanGameBoard, 'player');
+        _this.ai.removePositionFromArray(randomArrayIndex);
+
+        (0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.refreshTiles)(_this.humanGameBoard, 'player');
         _this.humanTurn = true;
-        _index_js__WEBPACK_IMPORTED_MODULE_2__.announcer.innerText = 'Your turn!';
+        _index_js__WEBPACK_IMPORTED_MODULE_3__.announcer.innerText = 'Your turn!';
+        console.log(_this.ai.lastSuccessHit);
       }, 2000);
     }
   }]);
@@ -445,12 +521,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "playerBoardDOM": () => (/* binding */ playerBoardDOM)
 /* harmony export */ });
 /* harmony import */ var _functionality_gameManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./functionality/gameManager */ "./src/functionality/gameManager.js");
-/* harmony import */ var _classes_GameBoard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/GameBoard */ "./src/classes/GameBoard.js");
-/* harmony import */ var _classes_Ship__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./classes/Ship */ "./src/classes/Ship.js");
-/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
-/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./domManip/GameBoard */ "./src/domManip/GameBoard.js");
-/* harmony import */ var _domManip_DOMMouseEvents__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./domManip/DOMMouseEvents */ "./src/domManip/DOMMouseEvents.js");
-
+/* harmony import */ var _classes_AI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/AI */ "./src/classes/AI.js");
+/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
+/* harmony import */ var _domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./domManip/GameBoard */ "./src/domManip/GameBoard.js");
+/* harmony import */ var _domManip_DOMMouseEvents__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./domManip/DOMMouseEvents */ "./src/domManip/DOMMouseEvents.js");
 
 
 
@@ -463,11 +537,11 @@ var announcer = document.querySelector('.announcer');
 console.log(announcer);
 gameManager.humanGameBoard.randomPlacement();
 gameManager.aiGameBoard.randomPlacement();
-(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.appendTiles)(playerBoardDOM, gameManager.humanGameBoard);
-(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.appendTiles)(aiBoardDOM, gameManager.aiGameBoard);
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(playerBoardDOM, gameManager.humanGameBoard);
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.appendTiles)(aiBoardDOM, gameManager.aiGameBoard);
 var aiTiles = document.querySelectorAll('.aiBoard .tile');
-(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_4__.refreshTiles)(gameManager.humanGameBoard, 'player');
-(0,_domManip_DOMMouseEvents__WEBPACK_IMPORTED_MODULE_5__.aiMouseEvents)(aiTiles);
+(0,_domManip_GameBoard__WEBPACK_IMPORTED_MODULE_3__.refreshTiles)(gameManager.humanGameBoard, 'player');
+(0,_domManip_DOMMouseEvents__WEBPACK_IMPORTED_MODULE_4__.aiMouseEvents)(aiTiles);
 
 /***/ }),
 
@@ -1155,4 +1229,4 @@ module.exports = styleTagTransform;
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=main0fac30f8b5cf805d99de.js.map
+//# sourceMappingURL=mainf14ff1896350741c26d6.js.map

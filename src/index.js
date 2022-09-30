@@ -1,6 +1,5 @@
 import GameManager from "./functionality/gameManager";
-import GameBoard from "./classes/GameBoard";
-import Ship from "./classes/Ship";
+import Ai from "./classes/AI";
 import './styles/main.scss';
 import { appendTiles, refreshTiles } from "./domManip/GameBoard";
 import { aiMouseEvents } from "./domManip/DOMMouseEvents";
